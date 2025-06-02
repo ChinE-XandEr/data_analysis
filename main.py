@@ -73,6 +73,9 @@ def open_browser_via_firefox():
 if __name__ == '__main__':
     # 启动浏览器的线程
     browser_thread = threading.Thread(target=open_browser_via_chrome)
+    #当chrome不可用时，使用Firefox
+    if not webbrowser.get('chrome'):
+        browser_thread = threading.Thread(target=open_browser_via_firefox)
     # 设置线程为守护线程
     browser_thread.daemon = True
     browser_thread.start()

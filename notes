@@ -1,0 +1,55 @@
+#全部绘图函数
+plot_line()
+plot_bar()
+plot_histogram()
+plot_scatter()
+plot_box()
+plot_pie()
+plot_heatmap()
+plot_area()
+plot_violin()
+plot_cdf()
+plot_scatter_matrix()
+plot_3d_scatter()
+plot_3d_line()
+plot_3d_surface()
+plot_3d_bar()
+plot_stem()
+plot_step()
+plot_errorbar()
+plot_fill()
+plot_polar()
+plot_contour()
+plot_contourf()
+plot_density()
+plot_histogram_with_kde()
+plot_radar()
+plot_waterfall()
+
+
+
+
+
+# 折线图
+x = [1, 2, 3, 4, 5]
+y = [2, 3, 5, 7, 11]
+plot_line(x, y)
+
+# 条形图
+categories = ['A', 'B', 'C', 'D']
+values = [10, 20, 15, 25]
+plot_bar(categories, values)
+
+# 柱状图
+data = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5]
+plot_histogram(data)
+
+# 散点图
+x = [1, 2, 3, 4, 5]
+y = [2, 3, 5, 7, 11]
+plot_scatter(x, y)
+
+# 箱线图
+data = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5]
+
+

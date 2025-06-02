@@ -64,6 +64,7 @@ def open_browser_via_chrome():
     browser = webbrowser.get(chrome_path)
     browser.open(f'http://localhost:{FLASK_PORT}')
 
+# open firefox if chrome is not available
 def open_browser_via_firefox():
     time.sleep(1.5)  # 等待服务器启动
     firefox_path = 'open -a /Applications/Firefox.app %s'

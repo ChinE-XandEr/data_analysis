@@ -45,6 +45,7 @@ def call_function():
         return jsonify({'result': "未知函数", 'url': None})
 
 # 定义跳转页面路由
+# 跳转到不同的HTML页面
 @app.route('/one')
 def one_page():
     return send_file('one_array.html')
@@ -57,7 +58,7 @@ def two_page():
 def three_page():
     return send_file('three_arrays.html')
 
-# Safari is inavailable on macOS, so we will use Chrome or Firefox
+# Safari is unavailable on macOS, so we will use Chrome or Firefox
 def open_browser_via_chrome():
     time.sleep(1.5)  # 等待服务器启动
     chrome_path = 'open -a /Applications/Google\ Chrome.app %s'

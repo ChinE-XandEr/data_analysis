@@ -38,7 +38,7 @@
     </style>
     <script>
         function callPythonFunction(funcName) {
-            fetch(`http://localhost:5000/call_function`, {
+            fetch(`http://localhost:5001/call_function`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -47,8 +47,10 @@
             })
             .then(response => response.json())
             .then(data => {
+                console.log('Response:', data);  // 添加调试日志
                 if (data.url) {
-                    window.location.href = data.url;
+                    // 使用完整的URL
+                    window.location.href = `http://localhost:5001${data.url}`;
                 } else {
                     alert(data.result);
                 }

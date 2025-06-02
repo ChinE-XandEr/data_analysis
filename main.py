@@ -3,11 +3,14 @@ import webbrowser
 import threading
 import time
 import os
+from flask import send_file
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # 指定端口号
-FLASK_PORT = 5000
+FLASK_PORT = 5001
 
 # 设置静态文件路由
 @app.route('/')
@@ -44,15 +47,15 @@ def call_function():
 # 定义跳转页面路由
 @app.route('/one')
 def one_page():
-    return "调用了一个数组"
+    return send_file('one_array.html')
 
 @app.route('/two')
 def two_page():
-    return "调用了两个数组"
+    return send_file('two_arrays.html')
 
 @app.route('/three')
 def three_page():
-    return "调用了三个数组"
+    return send_file('three_arrays.html')
 
 # Safari is inavailable on macOS, so we will use Chrome or Firefox
 def open_browser_via_chrome():
@@ -70,14 +73,11 @@ def open_browser_via_firefox():
 if __name__ == '__main__':
     # 启动浏览器的线程
     browser_thread = threading.Thread(target=open_browser_via_chrome)
-    # 如果Chrome不可用，则尝试Firefox
-    if not webbrowser.get('google-chrome'):
-        browser_thread = threading.Thread(target=open_browser_via_firefox)
     # 设置线程为守护线程
     browser_thread.daemon = True
     browser_thread.start()
     
     # 启动Flask服务器
     print(f"Flask Server started at http://localhost:{FLASK_PORT}")
-    app.run(port=FLASK_PORT, debug=False)
+    app.run(host='0.0.0.0', port=FLASK_PORT, debug=False)
 

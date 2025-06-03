@@ -72,69 +72,100 @@ def plot():
         chart_type = data['chart_type']
         plot_type = data['type']
         
-        # 将输入数据转换为数组
-        array1 = np.array(data['array1'])
+        if not isinstance(data['array1'], list):
+            return jsonify({'success': False, 'error': '数据格式错误：array1 必须是数组'})
         
+        # 将输入数据转换为数组
+        try:
+            array1 = np.array(data['array1'])
+        except (ValueError, TypeError):
+            return jsonify({'success': False, 'error': '数据格式错误：array1 包含无效数值'})
+            
         if chart_type == 'one_array':
-            if plot_type == 'placeholder1':
+            if plot_type == 'histogram':
                 plot_histogram(array1)
-            elif plot_type == 'placeholder2':
+            elif plot_type == 'box':
                 plot_box(array1)
-            elif plot_type == 'placeholder3':
-                # 生成x轴数据
+            elif plot_type == 'bar':
                 x = np.arange(len(array1))
                 plot_bar(x, array1)
-                
+        
         elif chart_type == 'two_arrays':
-            array2 = np.array(data['array2'])
+            if not isinstance(data['array2'], list):
+                return jsonify({'success': False, 'error': '数据格式错误：array2 必须是数组'})
+            try:
+                array2 = np.array(data['array2'])
+            except (ValueError, TypeError):
+                return jsonify({'success': False, 'error': '数据格式错误：array2 包含无效数值'})
+                
+            if len(array1) != len(array2):
+                return jsonify({'success': False, 'error': '两个数组长度必须相同'})
+                
             if plot_type == 'scatter':
                 plot_scatter(array1, array2)
             elif plot_type == 'line':
                 plot_line(array1, array2)
             elif plot_type == 'bar':
                 plot_bar(array1, array2)
-                
+        
         elif chart_type == 'three_arrays':
-            array2 = np.array(data['array2'])
-            array3 = np.array(data['array3'])
-            if plot_type == 'placeholder1':
+            if not isinstance(data['array2'], list) or not isinstance(data['array3'], list):
+                return jsonify({'success': False, 'error': '数据格式错误：array2 和 array3 必须是数组'})
+            try:
+                array2 = np.array(data['array2'])
+                array3 = np.array(data['array3'])
+            except (ValueError, TypeError):
+                return jsonify({'success': False, 'error': '数据格式错误：array2 或 array3 包含无效数值'})
+                
+            if len(array1) != len(array2) or len(array1) != len(array3):
+                return jsonify({'success': False, 'error': '三个数组长度必须相同'})
+                
+            if plot_type == 'scatter3d':
                 plot_3d_scatter(array1, array2, array3)
-            elif plot_type == 'placeholder2':
-                # 创建网格数据
+            elif plot_type == 'line3d':
                 plot_3d_line(array1, array2, array3)
-            elif plot_type == 'placeholder3':
+            elif plot_type == 'bar3d':
                 plot_3d_bar(array1, array2, array3)
+        
+        plt.close('all')  # 确保所有图表都被关闭
+        return jsonify({'success': True})
         
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
-# 添加静态文件路由
-@app.route('/static/<path:path>')
-def send_static(path):
-    return send_from_directory('static', path)
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not found'}), 404
 
-# Safari is unavailable on macOS, so we will use Chrome or Firefox
-def open_browser_via_chrome():
-    time.sleep(1.5)  # 等待服务器启动
-    chrome_path = 'open -a /Applications/Google\ Chrome.app %s'
-    browser = webbrowser.get(chrome_path)
-    browser.open(f'http://localhost:{FLASK_PORT}')
+@app.errorhandler(500)
+def server_error(error):
+    return jsonify({'error': 'Internal server error'}), 500
 
-# open firefox if chrome is not available
-def open_browser_via_firefox():
+# 确保静态文件可以被访问
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('static', filename)
+
+# 添加跨域支持的错误处理
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST')
+    return response
+
+def open_browser():
     time.sleep(1.5)  # 等待服务器启动
-    firefox_path = 'open -a /Applications/Firefox.app %s'
-    browser = webbrowser.get(firefox_path)
-    browser.open(f'http://localhost:{FLASK_PORT}')
+    print(f"\n请在 VS Code 中使用以下方式访问网页：")
+    print(f"1. 按下 Cmd/Ctrl + Shift + P")
+    print(f"2. 输入 'Simple Browser: Show'")
+    print(f"3. 在弹出的输入框中输入: http://localhost:{FLASK_PORT}")
+    print(f"\n或者直接点击这个链接：http://localhost:{FLASK_PORT}")
 
 if __name__ == '__main__':
-    # 启动浏览器的线程
-    browser_thread = threading.Thread(target=open_browser_via_chrome)
-    #当chrome不可用时，使用Firefox
-    if not webbrowser.get('chrome'):
-        browser_thread = threading.Thread(target=open_browser_via_firefox)
-    # 设置线程为守护线程
+    # 启动浏览器提示的线程
+    browser_thread = threading.Thread(target=open_browser)
     browser_thread.daemon = True
     browser_thread.start()
     

@@ -40,9 +40,18 @@ env/
 instance/
 .webassets-cache
 
-# 日志文件
+# 项目特定文件
+static/*.png
+backup/
 *.log
 
 # 本地配置文件
 config.local.py
 .env.local
+*.local.py
+.env.local
+
+# 临时文件
+*.tmp
+*.temp
+~*

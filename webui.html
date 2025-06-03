@@ -49,8 +49,7 @@
             .then(data => {
                 console.log('Response:', data);  // 添加调试日志
                 if (data.url) {
-                    // 使用完整的URL
-                    window.location.href = `http://localhost:5001${data.url}`;
+                    window.location.href = data.url;
                 } else {
                     alert(data.result);
                 }

@@ -79,6 +79,7 @@
         <div class="button-container">
             <button class="submit-button" onclick="submitData()">生成图表</button>
         </div>
+        <div id="plot-container"></div>
     </div>
     <div class="back-button">
         <a href="one_array.html">返回上一页</a>
@@ -97,9 +98,9 @@
         function setPageTitle() {
             const type = getUrlParameter('type');
             const titleMap = {
-                'placeholder1': '图表类型1数据输入',
-                'placeholder2': '图表类型2数据输入',
-                'placeholder3': '图表类型3数据输入'
+                'histogram': '柱状图数据输入',
+                'box': '箱线图数据输入',
+                'bar': '条形图数据输入'
             };
             const title = titleMap[type] || '数据输入';
             document.getElementById('pageTitle').textContent = title;

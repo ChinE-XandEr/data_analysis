@@ -73,15 +73,23 @@
     <h1 id="pageTitle">数据输入</h1>
     <div class="input-container">
         <div class="input-group">
-            <label for="array1">数组数据（用逗号分隔）：</label>
+            <label for="array1">第一个数组（用逗号分隔）：</label>
             <textarea id="array1" placeholder="例如：1,2,3,4,5"></textarea>
+        </div>
+        <div class="input-group">
+            <label for="array2">第二个数组（用逗号分隔）：</label>
+            <textarea id="array2" placeholder="例如：2,4,6,8,10"></textarea>
+        </div>
+        <div class="input-group">
+            <label for="array3">第三个数组（用逗号分隔）：</label>
+            <textarea id="array3" placeholder="例如：3,6,9,12,15"></textarea>
         </div>
         <div class="button-container">
             <button class="submit-button" onclick="submitData()">生成图表</button>
         </div>
     </div>
     <div class="back-button">
-        <a href="one_array.html">返回上一页</a>
+        <a href="three_arrays.html">返回上一页</a>
     </div>
 
     <script>
@@ -108,12 +116,16 @@
         // 提交数据
         function submitData() {
             const array1 = document.getElementById('array1').value;
+            const array2 = document.getElementById('array2').value;
+            const array3 = document.getElementById('array3').value;
             const type = getUrlParameter('type');
             
             // 这里可以添加数据验证和提交逻辑
             console.log('提交的数据：', {
                 type: type,
-                array1: array1
+                array1: array1,
+                array2: array2,
+                array3: array3
             });
         }
 

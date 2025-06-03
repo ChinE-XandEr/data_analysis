@@ -73,15 +73,19 @@
     <h1 id="pageTitle">数据输入</h1>
     <div class="input-container">
         <div class="input-group">
-            <label for="array1">数组数据（用逗号分隔）：</label>
+            <label for="array1">第一个数组（用逗号分隔）：</label>
             <textarea id="array1" placeholder="例如：1,2,3,4,5"></textarea>
+        </div>
+        <div class="input-group">
+            <label for="array2">第二个数组（用逗号分隔）：</label>
+            <textarea id="array2" placeholder="例如：2,4,6,8,10"></textarea>
         </div>
         <div class="button-container">
             <button class="submit-button" onclick="submitData()">生成图表</button>
         </div>
     </div>
     <div class="back-button">
-        <a href="one_array.html">返回上一页</a>
+        <a href="two_arrays.html">返回上一页</a>
     </div>
 
     <script>
@@ -97,9 +101,9 @@
         function setPageTitle() {
             const type = getUrlParameter('type');
             const titleMap = {
-                'placeholder1': '图表类型1数据输入',
-                'placeholder2': '图表类型2数据输入',
-                'placeholder3': '图表类型3数据输入'
+                'scatter': '散点图数据输入',
+                'line': '折线图数据输入',
+                'bar': '条形图数据输入'
             };
             const title = titleMap[type] || '数据输入';
             document.getElementById('pageTitle').textContent = title;
@@ -108,12 +112,14 @@
         // 提交数据
         function submitData() {
             const array1 = document.getElementById('array1').value;
+            const array2 = document.getElementById('array2').value;
             const type = getUrlParameter('type');
             
             // 这里可以添加数据验证和提交逻辑
             console.log('提交的数据：', {
                 type: type,
-                array1: array1
+                array1: array1,
+                array2: array2
             });
         }
 

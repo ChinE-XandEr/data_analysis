@@ -4,68 +4,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web UI</title>
+    <title>数据分析</title>
     <style>
+        :root {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --card-bg: #fff;
+            --primary-color: #4CAF50;
+            --primary-hover: #45a049;
+            --shadow-color: rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #fff;
+            --card-bg: #2d2d2d;
+            --primary-color: #5cbb60;
+            --primary-hover: #4a994e;
+            --shadow-color: rgba(0,0,0,0.3);
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f0f0f0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            position: relative;
         }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin: 20px 0;
+        }
+
         h1 {
-            color: #333;
+            color: var(--text-color);
             text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px var(--shadow-color);
         }
+
         .button-container {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
         }
+
         button {
-            background-color: #4CAF50;
+            background-color: var(--primary-color);
             color: white;
-            padding: 10px 20px;
+            padding: 15px 30px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px var(--shadow-color);
         }
+
         button:hover {
-            background-color: #45a049;
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            color: var(--text-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
         }
     </style>
-    <script>
-        function callPythonFunction(funcName) {
-            fetch(`http://localhost:5001/call_function`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ function_name: funcName })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Response:', data);  // 添加调试日志
-                if (data.url) {
-                    window.location.href = data.url;
-                } else {
-                    alert(data.result);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
 </head>
 <body>
-    <h1>Data Analysis</h1>
-    <div class="button-container">
-        <button onclick="callPythonFunction('import_files_one')">一个数组</button>
-        <button onclick="callPythonFunction('import_files_two')">两个数组</button>
-        <button onclick="callPythonFunction('import_files_three')">三个数组</button>
+    <div class="container">
+        <h1>数据分析</h1>
+        <div class="button-container">
+            <button onclick="navigateTo('/one')">单个数组</button>
+            <button onclick="navigateTo('/two')">两个数组</button>
+            <button onclick="navigateTo('/three')">三个数组</button>
+        </div>
     </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色模式">
+        🌓
+    </button>
+
+    <script>
+        // 主题切换功能
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // 页面加载时设置主题
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        });
+
+        // 页面导航函数
+        function navigateTo(path) {
+            window.location.href = 'http://localhost:5001' + path;
+        }
+    </script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')  # 设置后端为非交互式
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -100,7 +102,9 @@ def plot_area(input_x, input_y1, input_y2):
     plt.close()
 
 def plot_violin(input_x):
-    plt.violinplot(input_x, showmeans=True, showmedians=True)
+    """绘制小提琴图"""
+    plt.figure()
+    plt.violinplot(input_x)
     plt.title('小提琴图')
     plt.ylabel('值')
     set_plot_style()
@@ -277,6 +281,45 @@ def plot_waterfall(input_x, input_y1):
     ax.set_title('瀑布图')
     ax.set_xlabel('X轴')
     ax.set_ylabel('Y轴')
+    set_plot_style()
+    plt.savefig('static/plot.png')
+    plt.close()
+
+def plot_scatter3d(x, y, z):
+    """绘制三维散点图"""
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(x, y, z)
+    ax.set_xlabel('X轴')
+    ax.set_ylabel('Y轴')
+    ax.set_zlabel('Z轴')
+    plt.title('三维散点图')
+    set_plot_style()
+    plt.savefig('static/plot.png')
+    plt.close()
+
+def plot_line3d(x, y, z):
+    """绘制三维线图"""
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot3D(x, y, z)
+    ax.set_xlabel('X轴')
+    ax.set_ylabel('Y轴')
+    ax.set_zlabel('Z轴')
+    plt.title('三维线图')
+    set_plot_style()
+    plt.savefig('static/plot.png')
+    plt.close()
+
+def plot_bar3d(x, y, z):
+    """绘制三维柱状图"""
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.bar3d(x, y, np.zeros_like(z), 0.8, 0.8, z)
+    ax.set_xlabel('X轴')
+    ax.set_ylabel('Y轴')
+    ax.set_zlabel('Z轴')
+    plt.title('三维柱状图')
     set_plot_style()
     plt.savefig('static/plot.png')
     plt.close()

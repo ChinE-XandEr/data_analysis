@@ -2,51 +2,68 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import os
+
+# 确保static文件夹存在
+if not os.path.exists('static'):
+    os.makedirs('static')
 
 def plot_line(input_x, input_y1):
+    plt.figure()
     plt.plot(input_x, input_y1)
     plt.title('折线图')
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_bar(input_x, input_y1):
+    plt.figure()
     plt.bar(input_x, input_y1)
     plt.title('条形图')
     plt.xlabel('类别')
     plt.ylabel('值')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_histogram(input_x):
+    plt.figure()
     plt.hist(input_x, bins=5, edgecolor='black')
     plt.title('柱状图')
     plt.xlabel('值')
     plt.ylabel('频率')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_scatter(input_x, input_y1):
+    plt.figure()
     plt.scatter(input_x, input_y1)
     plt.title('散点图')
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_box(input_x):
+    plt.figure()
     plt.boxplot(input_x)
     plt.title('箱线图')
     plt.ylabel('值')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_pie(input_x, input_y1):
     plt.pie(input_y1, labels=input_x, autopct='%1.1f%%')
     plt.title('饼图')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_heatmap(input_x):
     plt.imshow(input_x, cmap='hot', interpolation='nearest')
     plt.title('热力图')
     plt.colorbar()
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_area(input_x, input_y1, input_y2):
     plt.fill_between(input_x, input_y1, label='系列1')
@@ -55,13 +72,15 @@ def plot_area(input_x, input_y1, input_y2):
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
     plt.legend()
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_violin(input_x):
     plt.violinplot(input_x, showmeans=True, showmedians=True)
     plt.title('小提琴图')
     plt.ylabel('值')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_cdf(input_x):
     sorted_data = np.sort(input_x)
@@ -70,12 +89,14 @@ def plot_cdf(input_x):
     plt.title('累积分布函数图')
     plt.xlabel('值')
     plt.ylabel('累积概率')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_scatter_matrix(input_x):
     pd.plotting.scatter_matrix(input_x, alpha=0.2)
     plt.suptitle('散点图矩阵')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_3d_scatter(input_x, input_y1, input_y2):
     fig = plt.figure()
@@ -85,7 +106,8 @@ def plot_3d_scatter(input_x, input_y1, input_y2):
     ax.set_xlabel('X轴')
     ax.set_ylabel('Y轴')
     ax.set_zlabel('Z轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_3d_line(input_x, input_y1, input_y2):
     fig = plt.figure()
@@ -95,7 +117,8 @@ def plot_3d_line(input_x, input_y1, input_y2):
     ax.set_xlabel('X轴')
     ax.set_ylabel('Y轴')
     ax.set_zlabel('Z轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_3d_surface(input_x, input_y1, input_y2):
     fig = plt.figure()
@@ -105,41 +128,46 @@ def plot_3d_surface(input_x, input_y1, input_y2):
     ax.set_xlabel('X轴')
     ax.set_ylabel('Y轴')
     ax.set_zlabel('Z轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_3d_bar(input_x, input_y1, input_y2):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
     dx = np.ones(len(input_x))
     dy = np.ones(len(input_y1))
     dz = input_y2
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
     ax.bar3d(input_x, input_y1, input_y2, dx, dy, dz, color='b')
     ax.set_title('三维柱状图')
     ax.set_xlabel('X轴')
     ax.set_ylabel('Y轴')
     ax.set_zlabel('Z轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_stem(input_x, input_y1):
     plt.stem(input_x, input_y1)
     plt.title('茎叶图')
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_step(input_x, input_y1):
     plt.step(input_x, input_y1)
     plt.title('阶梯图')
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_errorbar(input_x, input_y1, input_y2):
     plt.errorbar(input_x, input_y1, input_y2=input_y2, fmt='o')
     plt.title('误差条图')
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_fill(input_x, input_y1, input_y2):
     plt.fill_between(input_x, input_y1, input_y2, where=(input_y1 > input_y2), color='blue', alpha=0.3)
@@ -147,20 +175,23 @@ def plot_fill(input_x, input_y1, input_y2):
     plt.title('填充图')
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_polar(input_x, input_y1):
     fig, ax = plt.subplots(subplot_kw={'projection': 'polar'})
     ax.plot(input_x, input_y1)
     ax.set_title('极坐标图')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_contour(input_x, input_y1, input_y2):
     plt.contour(input_x, input_y1, input_y2, levels=10, cmap='viridis')
     plt.title('等高线图')
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_contourf(input_x, input_y1, input_y2):
     plt.contourf(input_x, input_y1, input_y2, levels=10, cmap='viridis')
@@ -168,21 +199,24 @@ def plot_contourf(input_x, input_y1, input_y2):
     plt.title('等高线填充图')
     plt.xlabel('X轴')
     plt.ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_density(input_x):
     sns.kdeplot(input_x, shade=True)
     plt.title('密度图')
     plt.xlabel('值')
     plt.ylabel('密度')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_histogram_with_kde(input_x):
     sns.histplot(input_x, kde=True, bins=30)
     plt.title('直方图与核密度估计图')
     plt.xlabel('值')
     plt.ylabel('频率')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_radar(input_x, input_y1):
     angles = np.linspace(0, 2 * np.pi, len(input_x), endpoint=False).tolist()
@@ -192,7 +226,8 @@ def plot_radar(input_x, input_y1):
     ax.fill(angles, input_y1, color='blue', alpha=0.25)
     ax.set_thetagrids(np.degrees(angles), input_x)
     ax.set_title('雷达图')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()
 
 def plot_waterfall(input_x, input_y1):
     fig, ax = plt.subplots()
@@ -201,4 +236,5 @@ def plot_waterfall(input_x, input_y1):
     ax.set_title('瀑布图')
     ax.set_xlabel('X轴')
     ax.set_ylabel('Y轴')
-    plt.show()
+    plt.savefig('static/plot.png')
+    plt.close()

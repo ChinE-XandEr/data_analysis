@@ -110,10 +110,45 @@
             const array1 = document.getElementById('array1').value;
             const type = getUrlParameter('type');
             
-            // 这里可以添加数据验证和提交逻辑
-            console.log('提交的数据：', {
-                type: type,
-                array1: array1
+            fetch('http://localhost:5001/plot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    type: type,
+                    array1: array1.split(',').map(Number),
+                    chart_type: 'one_array'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 显示图表
+                    const plotImage = document.createElement('img');
+                    plotImage.src = 'static/plot.png?' + new Date().getTime(); // 添加时间戳防止缓存
+                    plotImage.style.maxWidth = '100%';
+                    plotImage.style.display = 'block';
+                    plotImage.style.margin = '20px auto';
+                    
+                    // 获取或创建图表容器
+                    let plotContainer = document.getElementById('plot-container');
+                    if (!plotContainer) {
+                        plotContainer = document.createElement('div');
+                        plotContainer.id = 'plot-container';
+                        document.querySelector('.input-container').appendChild(plotContainer);
+                    }
+                    
+                    // 清空容器并添加新图表
+                    plotContainer.innerHTML = '';
+                    plotContainer.appendChild(plotImage);
+                } else {
+                    alert('生成图表时出错: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('提交数据时出错');
             });
         }
 

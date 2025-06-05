@@ -1,4 +1,46 @@
-#全部绘图函数
+alpha 1.0 
+
+目前
+这个项目已经开发完毕
+基本的功能都有
+但是
+确实似乎没什么用
+所以
+也许会终止开发
+
+
+
+
+outlook
+
+优化一下UI
+更多的函数
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+全部绘图函数
+
 plot_line()
 plot_bar()
 plot_histogram()
@@ -25,31 +67,3 @@ plot_density()
 plot_histogram_with_kde()
 plot_radar()
 plot_waterfall()
-
-
-
-
-
-# 折线图
-x = [1, 2, 3, 4, 5]
-y = [2, 3, 5, 7, 11]
-plot_line(x, y)
-
-# 条形图
-categories = ['A', 'B', 'C', 'D']
-values = [10, 20, 15, 25]
-plot_bar(categories, values)
-
-# 柱状图
-data = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5]
-plot_histogram(data)
-
-# 散点图
-x = [1, 2, 3, 4, 5]
-y = [2, 3, 5, 7, 11]
-plot_scatter(x, y)
-
-# 箱线图
-data = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5]
-
-

@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, redirect, url_for, send_from_directory
-import webbrowser
 import threading
 import time
 import os
@@ -283,4 +282,3 @@ if __name__ == '__main__':
     # 启动Flask服务器
     print(f"Flask Server started at http://localhost:{FLASK_PORT}")
     app.run(host='0.0.0.0', port=FLASK_PORT, debug=False)
-

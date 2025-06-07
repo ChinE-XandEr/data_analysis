@@ -32,7 +32,6 @@ def import_files_two():
 def import_files_three():
     return "导入三个数组"
 
-
 # 定义路由处理函数
 @app.route('/call_function', methods=['POST'])
 def call_function():
@@ -75,18 +74,10 @@ def three_page():
 def three_inputs_page():
     return send_file('three_inputs.html')
 
-@app.route('/three_arrays.html')
-def three_arrays_page():
-    return send_file('three_arrays.html')
-
 # 处理图表请求
 @app.route('/plot', methods=['POST'])
 def plot():
     try:
-        # 确保static文件夹存在
-        if not os.path.exists('static'):
-            os.makedirs('static')
-            
         data = request.json
         print(f"接收到的数据: {data}")
         
@@ -123,8 +114,10 @@ def plot():
                 return jsonify({'success': False, 'error': str(e)})
         
         elif chart_type == 'two_arrays':
+            # 验证array2是否为列表
             if not isinstance(data['array2'], list):
                 return jsonify({'success': False, 'error': '数据格式错误：array2 必须是数组'})
+            
             try:
                 array2 = np.array(data['array2'])
                 print(f"array2: {array2}")
@@ -132,6 +125,7 @@ def plot():
                 print(f"转换array2时出错: {e}")
                 return jsonify({'success': False, 'error': '数据格式错误：array2 包含无效数值'})
                 
+            # 检查两个数组长度是否相同
             if len(array1) != len(array2):
                 print(f"数组长度不匹配: array1={len(array1)}, array2={len(array2)}")
                 return jsonify({'success': False, 'error': '两个数组长度必须相同'})
@@ -190,56 +184,6 @@ def plot():
             'image_url': '/static/plot.png'
         })
 
-    except Exception as e:
-        print(f"处理请求时出错: {e}")
-        return jsonify({'success': False, 'error': str(e)})
-
-@app.route('/plot_three_arrays', methods=['POST'])
-def plot_three_arrays():
-    try:
-        # 确保static文件夹存在
-        if not os.path.exists('static'):
-            os.makedirs('static')
-            
-        data = request.json
-        print(f"接收到的数据: {data}")
-        
-        # 验证输入数据
-        if not all(isinstance(data.get(f'array{i}'), list) for i in range(1, 4)):
-            return jsonify({'success': False, 'error': '数据格式错误：所有数组必须是列表'})
-        
-        try:
-            # 将输入数据转换为数组
-            array1 = np.array(data['array1'], dtype=float)
-            array2 = np.array(data['array2'], dtype=float)
-            array3 = np.array(data['array3'], dtype=float)
-            plot_type = data['type']
-            
-            # 验证数组长度
-            if len(array1) != len(array2) or len(array1) != len(array3):
-                return jsonify({'success': False, 'error': '三个数组长度必须相同'})
-            
-            # 调用绘图函数
-            if plot_type == 'scatter3d':
-                plot_3d_scatter(array1, array2, array3)
-            elif plot_type == 'line3d':
-                plot_3d_line(array1, array2, array3)
-            elif plot_type == 'bar3d':
-                plot_3d_bar(array1, array2, array3)
-            else:
-                return jsonify({'success': False, 'error': '不支持的图表类型'})
-            
-            # 确保图表已保存
-            plot_path = os.path.join('static', 'plot.png')
-            if not os.path.exists(plot_path):
-                return jsonify({'success': False, 'error': '图表保存失败'})
-            
-            plt.close('all')  # 确保所有图表都被关闭
-            return send_file('static/plot.png', mimetype='image/png')
-            
-        except (ValueError, TypeError) as e:
-            return jsonify({'success': False, 'error': f'数据转换错误：{str(e)}'})
-            
     except Exception as e:
         print(f"处理请求时出错: {e}")
         return jsonify({'success': False, 'error': str(e)})

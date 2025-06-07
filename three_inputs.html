@@ -292,7 +292,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        chart_type: 'two_arrays',
+                        chart_type: 'three_arrays',  // 修改为正确的 chart_type
                         type: type,
                         array1: array1,
                         array2: array2,
@@ -313,7 +313,7 @@
                     const plotContainer = document.getElementById('plot-container');
                     plotContainer.innerHTML = '';
                     const img = document.createElement('img');
-                    img.src = data.image_path + '?t=' + new Date().getTime(); // 添加时间戳防止缓存
+                    img.src = data.image_url + '?t=' + new Date().getTime(); // 修改为 image_url
                     img.alt = '生成的图表';
                     img.style.maxWidth = '100%';
                     plotContainer.appendChild(img);

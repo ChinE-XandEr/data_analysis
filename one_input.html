@@ -197,6 +197,7 @@
         function toggleTheme() {
             const body = document.body;
             const currentTheme = body.getAttribute('data-theme');
+            
             if (currentTheme === 'dark') {
                 body.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
@@ -206,68 +207,116 @@
             }
         }
 
-        // 页面加载时设置主题和标题
+        // 页面加载时设置主题
         document.addEventListener('DOMContentLoaded', () => {
-            setPageTitle();
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') {
                 document.body.setAttribute('data-theme', 'dark');
             }
+            setPageTitle();
         });
 
         // 获取URL参数
         function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
         // 设置页面标题
         function setPageTitle() {
             const type = getUrlParameter('type');
-            const titles = {
-                'histogram': '直方图数据输入',
-                'box': '箱线图数据输入',
-                'violin': '小提琴图数据输入'
+            const chartTypes = {
+                'histogram': '直方图',
+                'box': '箱线图',
+                'violin': '小提琴图'
             };
-            document.getElementById('pageTitle').textContent = titles[type] || '数据输入';
-            document.title = titles[type] || '数据输入';
+            document.getElementById('pageTitle').textContent = `数据输入 - ${chartTypes[type] || '图表'}`;
         }
 
         // 提交数据到服务器
-        async function submitData() {
-            const array1Input = document.getElementById('array1').value;
-            const array1 = array1Input.split(',').map(num => parseFloat(num.trim()));
-            
-            if (array1.some(isNaN)) {
-                alert('请输入有效的数字，并用逗号分隔');
-                return;
-            }
-
-            const type = getUrlParameter('type');
-            const plotData = {
-                chart_type: 'one_array',
-                type: type,
-                array1: array1
-            };
-
+        function submitData() {
             try {
-                const response = await fetch('/plot', {
+                // 获取并清理输入数据
+                const array1Raw = document.getElementById('array1').value.trim();
+                
+                if (!array1Raw) {
+                    alert('请输入数据！');
+                    return;
+                }
+
+                // 转换数据为数组
+                const array1 = array1Raw.split(',').map(x => x.trim()).map(Number);
+                const type = getUrlParameter('type');
+
+                console.log('处理的数据:', { array1, type });
+
+                // 验证输入
+                if (array1.length === 0) {
+                    alert('数组不能为空！');
+                    return;
+                }
+
+                if (array1.some(isNaN)) {
+                    alert('请确保输入的都是有效的数字！');
+                    return;
+                }
+
+                // 禁用提交按钮防止重复提交
+                const submitButton = document.querySelector('.submit-button');
+                submitButton.disabled = true;
+                submitButton.textContent = '生成中...';
+
+                // 发送数据到服务器
+                fetch('http://localhost:5001/plot', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(plotData)
+                    body: JSON.stringify({
+                        chart_type: 'two_arrays',
+                        type: type,
+                        array1: array1
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    // 创建图像元素并显示
+                    const plotContainer = document.getElementById('plot-container');
+                    plotContainer.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = data.image_path + '?t=' + new Date().getTime(); // 添加时间戳防止缓存
+                    img.alt = '生成的图表';
+                    img.style.maxWidth = '100%';
+                    plotContainer.appendChild(img);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('生成图表时出错: ' + error.message);
+                })
+                .finally(() => {
+                    // 恢复提交按钮状态
+                    const submitButton = document.querySelector('.submit-button');
+                    submitButton.disabled = false;
+                    submitButton.textContent = '生成图表';
                 });
 
-                const result = await response.json();
-                if (result.success) {
-                    const plotContainer = document.getElementById('plot-container');
-                    plotContainer.innerHTML = `<img src="${result.image_url}?t=${Date.now()}" alt="生成的图表">`;
-                } else {
-                    alert(result.error || '生成图表时出错');
-                }
             } catch (error) {
-                alert('发送请求时出错：' + error.message);
+                console.error('Error:', error);
+                alert('处理数据时出错: ' + error.message);
+                // 恢复提交按钮状态
+                const submitButton = document.querySelector('.submit-button');
+                submitButton.disabled = false;
+                submitButton.textContent = '生成图表';
             }
         }
 

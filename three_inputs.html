@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>输入三组数据</title>
+    <title>数据输入</title>
     <style>
         :root {
             --bg-color: #f0f0f0;
@@ -12,8 +12,8 @@
             --primary-color: #4CAF50;
             --primary-hover: #45a049;
             --shadow-color: rgba(0,0,0,0.1);
-            --input-bg: #fff;
             --input-border: #ddd;
+            --input-bg: #fff;
         }
 
         [data-theme="dark"] {
@@ -23,8 +23,8 @@
             --primary-color: #5cbb60;
             --primary-hover: #4a994e;
             --shadow-color: rgba(0,0,0,0.3);
-            --input-bg: #3d3d3d;
-            --input-border: #4d4d4d;
+            --input-border: #444;
+            --input-bg: #333;
         }
 
         body {
@@ -39,14 +39,6 @@
             position: relative;
         }
 
-        .container {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px var(--shadow-color);
-            margin: 20px 0;
-        }
-
         h1 {
             color: var(--text-color);
             text-align: center;
@@ -55,47 +47,51 @@
             text-shadow: 2px 2px 4px var(--shadow-color);
         }
 
-        .form-group {
+        .input-container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin: 20px 0;
+        }
+
+        .input-group {
             margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: var(--text-color);
-            font-size: 16px;
             font-weight: 500;
         }
 
         textarea {
             width: 100%;
-            height: 100px;
             padding: 12px;
             border: 2px solid var(--input-border);
             border-radius: 8px;
+            resize: vertical;
+            min-height: 100px;
             background-color: var(--input-bg);
             color: var(--text-color);
-            font-size: 16px;
-            resize: vertical;
             transition: all 0.3s ease;
-            box-sizing: border-box;
             font-family: inherit;
+            font-size: 14px;
         }
 
         textarea:focus {
-            border-color: var(--primary-color);
             outline: none;
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
         }
 
         .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+            text-align: center;
             margin-top: 30px;
         }
 
-        button {
+        .submit-button {
             background-color: var(--primary-color);
             color: white;
             padding: 15px 30px;
@@ -108,21 +104,16 @@
             box-shadow: 0 2px 4px var(--shadow-color);
         }
 
-        button:hover {
+        .submit-button:hover {
             background-color: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px var(--shadow-color);
         }
 
-        button:active {
-            transform: translateY(0);
-        }
-
-        #errorMessage {
-            color: #ff4444;
-            text-align: center;
-            margin-top: 20px;
-            font-weight: 500;
+        .submit-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .back-button {
@@ -144,6 +135,17 @@
         .back-button a:hover {
             background-color: var(--primary-hover);
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        #plot-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        #plot-container img {
+            max-width: 100%;
+            border-radius: 8px;
             box-shadow: 0 4px 8px var(--shadow-color);
         }
 
@@ -169,57 +171,31 @@
         .theme-toggle:hover {
             transform: scale(1.1);
         }
-
-        #loading {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            margin: 0 auto;
-            border: 4px solid var(--card-bg);
-            border-top: 4px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>输入三组数据</h1>
-        <div class="form-group">
-            <label for="array1">第一组数据 (用逗号分隔):</label>
-            <textarea id="array1" required placeholder="例如: 1,2,3,4,5"></textarea>
+    <h1 id="pageTitle">数据输入</h1>
+    <div class="input-container">
+        <div class="input-group">
+            <label for="array1">第一个数组（用逗号分隔）：</label>
+            <textarea id="array1" placeholder="例如：1,2,3,4,5" spellcheck="false"></textarea>
         </div>
-        <div class="form-group">
-            <label for="array2">第二组数据 (用逗号分隔):</label>
-            <textarea id="array2" required placeholder="例如: 2,4,6,8,10"></textarea>
+        <div class="input-group">
+            <label for="array2">第二个数组（用逗号分隔）：</label>
+            <textarea id="array2" placeholder="例如：2,4,6,8,10" spellcheck="false"></textarea>
         </div>
-        <div class="form-group">
-            <label for="array3">第三组数据 (用逗号分隔):</label>
-            <textarea id="array3" required placeholder="例如: 3,6,9,12,15"></textarea>
-        </div>
-        <div id="errorMessage"></div>
-        <div id="loading">
-            <div class="spinner"></div>
-            <p>正在生成图表...</p>
+        <div class="input-group">
+            <label for="array3">第三个数组（用逗号分隔）：</label>
+            <textarea id="array3" placeholder="例如：3,6,9,12,15" spellcheck="false"></textarea>
         </div>
         <div class="button-container">
-            <button onclick="submitData()">生成图表</button>
+            <button class="submit-button" onclick="submitData()">生成图表</button>
         </div>
-        <div class="back-button">
-            <a href="http://localhost:5001/three_arrays.html">返回</a>
-        </div>
+        <div id="plot-container"></div>
     </div>
-
+    <div class="back-button">
+        <a href="/two">返回上一页</a>
+    </div>
     <button class="theme-toggle" onclick="toggleTheme()" title="切换深色/浅色模式">
         🌓
     </button>
@@ -245,67 +221,121 @@
             if (savedTheme === 'dark') {
                 document.body.setAttribute('data-theme', 'dark');
             }
-
-            // 根据图表类型设置标题
-            const type = getUrlParameter('type');
-            const titles = {
-                'scatter3d': '三维散点图数据输入',
-                'line3d': '三维线图数据输入',
-                'bar3d': '三维柱状图数据输入'
-            };
-            document.title = titles[type] || '三维数据输入';
-            document.querySelector('h1').textContent = titles[type] || '三维数据输入';
+            setPageTitle();
         });
 
         // 获取URL参数
         function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // 设置页面标题
+        function setPageTitle() {
+            const type = getUrlParameter('type');
+            const chartTypes = {
+                'scatter3d': '三维散点图',
+                'line3d': '三维线图',
+                'bar3d': '三维柱状图'
+            };
+            document.getElementById('pageTitle').textContent = `数据输入 - ${chartTypes[type] || '图表'}`;
         }
 
         // 提交数据到服务器
-        async function submitData() {
-            const array1 = document.getElementById('array1').value;
-            const array2 = document.getElementById('array2').value;
-            const array3 = document.getElementById('array3').value;
-            const errorElement = document.getElementById('errorMessage');
-            const loadingElement = document.getElementById('loading');
-            const chartType = getUrlParameter('type');
-
-            if (!array1 || !array2 || !array3) {
-                errorElement.textContent = '请填写所有数据字段';
-                return;
-            }
-
+        function submitData() {
             try {
-                errorElement.textContent = '';
-                loadingElement.style.display = 'block';
+                // 获取并清理输入数据
+                const array1Raw = document.getElementById('array1').value.trim();
+                const array2Raw = document.getElementById('array2').value.trim();
+                const array3Raw = document.getElementById('array3').value.trim();
 
-                const response = await fetch('http://localhost:5001/plot_three_arrays', {
+                if (!array1Raw || !array2Raw || !array3Raw) {
+                    alert('请输入数据！');
+                    return;
+                }
+
+                // 转换数据为数组
+                const array1 = array1Raw.split(',').map(x => x.trim()).map(Number);
+                const array2 = array2Raw.split(',').map(x => x.trim()).map(Number);
+                const array3 = array3Raw.split(',').map(x => x.trim()).map(Number);
+                const type = getUrlParameter('type');
+
+                console.log('处理的数据:', { array1, array2, array3, type });
+
+                // 验证输入
+                if (array1.length === 0 || array2.length === 0 || array3.length === 0) {
+                    alert('数组不能为空！');
+                    return;
+                }
+
+                if (array1.length !== array2.length || array1.length !== array3.length) {
+                    alert('三个数组的长度必须相同！');
+                    return;
+                }
+
+                if (array1.some(isNaN) || array2.some(isNaN) || array3.some(isNaN)) {
+                    alert('请确保输入的都是有效的数字！');
+                    return;
+                }
+
+                // 禁用提交按钮防止重复提交
+                const submitButton = document.querySelector('.submit-button');
+                submitButton.disabled = true;
+                submitButton.textContent = '生成中...';
+
+                // 发送数据到服务器
+                fetch('http://localhost:5001/plot', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        array1: array1.split(',').map(Number),
-                        array2: array2.split(',').map(Number),
-                        array3: array3.split(',').map(Number),
-                        type: chartType
-                    }),
+                        chart_type: 'two_arrays',
+                        type: type,
+                        array1: array1,
+                        array2: array2,
+                        array3: array3
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    // 创建图像元素并显示
+                    const plotContainer = document.getElementById('plot-container');
+                    plotContainer.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = data.image_path + '?t=' + new Date().getTime(); // 添加时间戳防止缓存
+                    img.alt = '生成的图表';
+                    img.style.maxWidth = '100%';
+                    plotContainer.appendChild(img);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('生成图表时出错: ' + error.message);
+                })
+                .finally(() => {
+                    // 恢复提交按钮状态
+                    const submitButton = document.querySelector('.submit-button');
+                    submitButton.disabled = false;
+                    submitButton.textContent = '生成图表';
                 });
 
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || '服务器响应错误');
-                }
-
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                window.open(url, '_blank');
             } catch (error) {
-                errorElement.textContent = '发生错误: ' + error.message;
-            } finally {
-                loadingElement.style.display = 'none';
+                console.error('Error:', error);
+                alert('处理数据时出错: ' + error.message);
+                // 恢复提交按钮状态
+                const submitButton = document.querySelector('.submit-button');
+                submitButton.disabled = false;
+                submitButton.textContent = '生成图表';
             }
         }
 

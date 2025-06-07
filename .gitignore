@@ -41,7 +41,7 @@ instance/
 .webassets-cache
 
 # 项目特定文件
-static/*.png
+plots/*.png
 backup/
 *.log
 

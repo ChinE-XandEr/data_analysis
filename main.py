@@ -10,9 +10,9 @@ from graph import *
 app = Flask(__name__)
 CORS(app)
 
-# 确保static文件夹存在
-if not os.path.exists('static'):
-    os.makedirs('static')
+# 确保plots文件夹存在
+if not os.path.exists('plots'):
+    os.makedirs('plots')
 
 # 指定端口号
 FLASK_PORT = 5001
@@ -98,17 +98,21 @@ def plot():
             
         if chart_type == 'one_array':
             try:
+                filename = None
                 if plot_type == 'histogram':
-                    plot_histogram(array1)
+                    filename = plot_histogram(array1)
                 elif plot_type == 'box':
-                    plot_box(array1)
+                    filename = plot_box(array1)
                 elif plot_type == 'violin':
-                    plot_violin(array1)
+                    filename = plot_violin(array1)
                 elif plot_type == 'bar':
                     x = np.arange(len(array1))
-                    plot_bar(x, array1)
+                    filename = plot_bar(x, array1)
                 else:
                     return jsonify({'success': False, 'error': f'未知的图表类型：{plot_type}'})
+                
+                if not filename:
+                    return jsonify({'success': False, 'error': '生成图片失败'})
             except Exception as e:
                 print(f"绘制一维图表时出错: {e}")
                 return jsonify({'success': False, 'error': str(e)})
@@ -131,14 +135,18 @@ def plot():
                 return jsonify({'success': False, 'error': '两个数组长度必须相同'})
                 
             try:
+                filename = None
                 if plot_type == 'scatter':
-                    plot_scatter(array1, array2)
+                    filename = plot_scatter(array1, array2)
                 elif plot_type == 'line':
-                    plot_line(array1, array2)
+                    filename = plot_line(array1, array2)
                 elif plot_type == 'bar':
-                    plot_bar(array1, array2)
+                    filename = plot_bar(array1, array2)
                 else:
                     return jsonify({'success': False, 'error': f'未知的图表类型：{plot_type}'})
+                
+                if not filename:
+                    return jsonify({'success': False, 'error': '生成图片失败'})
                 print("图表生成成功")
             except Exception as e:
                 print(f"绘制二维图表时出错: {e}")
@@ -164,14 +172,18 @@ def plot():
                 return jsonify({'success': False, 'error': '三个数组长度必须相同'})
             
             try:
+                filename = None
                 if plot_type == 'scatter3d':
-                    plot_scatter3d(array1, array2, array3)
+                    filename = plot_scatter3d(array1, array2, array3)
                 elif plot_type == 'line3d':
-                    plot_line3d(array1, array2, array3)
+                    filename = plot_line3d(array1, array2, array3)
                 elif plot_type == 'bar3d':
-                    plot_bar3d(array1, array2, array3)
+                    filename = plot_bar3d(array1, array2, array3)
                 else:
                     return jsonify({'success': False, 'error': f'未知的三维图表类型：{plot_type}'})
+                
+                if not filename:
+                    return jsonify({'success': False, 'error': '生成图片失败'})
                 print("三维图表生成成功")
             except Exception as e:
                 print(f"绘制三维图表时出错: {e}")
@@ -181,7 +193,7 @@ def plot():
         return jsonify({
             'success': True,
             'message': '图表生成成功',
-            'image_url': '/static/plot.png'
+            'image_url': f'/plots/{filename}'
         })
 
     except Exception as e:
@@ -196,10 +208,10 @@ def not_found(error):
 def server_error(error):
     return jsonify({'error': 'Internal server error'}), 500
 
-# 确保静态文件可以被访问
-@app.route('/static/<path:filename>')
-def serve_static(filename):
-    return send_from_directory('static', filename)
+# 确保图片文件可以被访问
+@app.route('/plots/<path:filename>')
+def serve_plots(filename):
+    return send_from_directory('plots', filename)
 
 # 添加跨域支持的错误处理
 @app.after_request
